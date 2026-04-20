@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ネタみっけ｜noteネタ切れ解消ツール</title>
+<meta name="description" content="ネタ切れ終わり。あなたの強みが記事になる。PASONAの法則で売れるnote記事を自動生成。">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Hiragino Sans','Meiryo',sans-serif;background:#0f1923;color:#e8eaf0;min-height:100vh;}
+
+/* ===== ヘッダー固定 ===== */
+.header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:linear-gradient(135deg,#1a2744,#0d3b6e);
+  color:white;padding:14px 16px 12px;text-align:center;
+  box-shadow:0 3px 24px rgba(0,100,255,.25);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.header h1{
+  font-size:1.7rem;font-weight:900;letter-spacing:.06em;
+  cursor:pointer;display:inline-block;transition:.15s;
+  background:linear-gradient(90deg,#60a5fa,#a78bfa,#f472b6);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.header h1:hover{opacity:.82;}
+.header p{font-size:.82rem;opacity:.75;margin-top:3px;color:#cbd5e1;}
+.header-actions{display:flex;gap:8px;justify-content:center;margin-top:10px;}
+.btn-hdr{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#cbd5e1;padding:6px 14px;border-radius:20px;font-size:.76rem;cursor:pointer;transition:.2s;}
+.btn-hdr:hover{background:rgba(255,255,255,.2);}
+
+.header-spacer{height:108px;}
+
+/* ===== Container ===== */
+.container{max-width:800px;margin:0 auto;padding:22px 16px 40px;}
+
+/* ===== Card ===== */
+.card{background:#1a2535;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:26px;box-shadow:0 4px 24px rgba(0,0,0,.3);margin-bottom:20px;}
+.card-title{font-size:1rem;font-weight:700;color:#60a5fa;margin-bottom:18px;display:flex;align-items:center;gap:6px;}
+
+/* ===== Fields ===== */
+.field-label{display:block;font-size:.82rem;font-weight:600;color:#94a3b8;margin:16px 0 5px;}
+.field-label:first-of-type{margin-top:0;}
+.badge-req{color:#f472b6;font-size:.72rem;margin-left:5px;}
+.badge-opt{color:#64748b;font-size:.72rem;margin-left:5px;}
+.badge-multi{color:#60a5fa;font-size:.72rem;margin-left:5px;}
+
+input[type=text],input[type=url],textarea,select{
+  width:100%;padding:10px 13px;
+  background:#0f1923;border:1.5px solid rgba(255,255,255,.12);
+  border-radius:9px;font-size:.9rem;font-family:inherit;
+  color:#e8eaf0;transition:.2s;
+}
+input:focus,textarea:focus,select:focus{
+  outline:none;border-color:#60a5fa;
+  box-shadow:0 0 0 3px rgba(96,165,250,.15);
+}
+textarea{resize:vertical;min-height:80px;}
+select option{background:#1a2535;}
+
+/* ===== Pills ===== */
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+.pills input[type=radio]{display:none;}
+.pills label{margin:0;padding:7px 14px;border:1.5px solid rgba(255,255,255,.12);border-radius:20px;font-size:.8rem;cursor:pointer;transition:.2s;font-weight:500;color:#94a3b8;}
+.pills input[type=radio]:checked+label{background:#1d4ed8;border-color:#3b82f6;color:white;}
+.pills label:hover{border-color:#60a5fa;color:#60a5fa;}
+
+/* ===== MJ Style Grid ===== */
+.mj-style-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;}
+.mj-style-grid input[type=radio]{display:none;}
+.mj-style-card{border:2px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 14px;cursor:pointer;transition:.2s;background:#0f1923;}
+.mj-style-grid input[type=radio]:checked+.mj-style-card{border-color:#60a5fa;background:#1e3a5f;}
+.mj-style-card .style-icon{font-size:1.4rem;margin-bottom:4px;}
+.mj-style-card .style-name{font-size:.82rem;font-weight:700;color:#e2e8f0;margin-bottom:2px;}
+.mj-style-card .style-desc{font-size:.72rem;color:#64748b;line-height:1.5;}
+.mj-style-grid input[type=radio]:checked+.mj-style-card .style-name{color:#60a5fa;}
+
+/* ===== Buttons ===== */
+.btn-gen{
+  width:100%;padding:16px;
+  background:linear-gradient(135deg,#1d4ed8,#7c3aed);
+  color:white;border:none;border-radius:12px;font-size:1.05rem;font-weight:700;
+  cursor:pointer;transition:.2s;letter-spacing:.05em;margin-top:20px;
+  box-shadow:0 4px 20px rgba(99,102,241,.3);
+}
+.btn-gen:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(99,102,241,.45);}
+.btn-gen:active{transform:translateY(0);}
+.btn-gen:disabled{background:#334155;cursor:not-allowed;transform:none;box-shadow:none;}
+
+.btn-reset{
+  width:100%;padding:14px;background:transparent;
+  color:#60a5fa;border:1.5px solid #60a5fa;border-radius:12px;
+  font-size:.95rem;font-weight:700;cursor:pointer;transition:.2s;
+  letter-spacing:.05em;margin-top:12px;
+}
+.btn-reset:hover{background:rgba(96,165,250,.1);}
+
+/* ===== Output ===== */
+.output-section{display:none;}
+.tab-btns{display:flex;gap:8px;margin-bottom:18px;}
+.tab-btn{flex:1;padding:10px;border:1.5px solid rgba(255,255,255,.1);background:#0f1923;border-radius:9px;font-size:.82rem;font-weight:600;cursor:pointer;color:#64748b;transition:.2s;}
+.tab-btn.active{background:#1d4ed8;border-color:#3b82f6;color:white;}
+
+.output-box{background:#0a1120;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:18px;font-size:.88rem;line-height:1.9;white-space:pre-wrap;word-break:break-word;max-height:560px;overflow-y:auto;margin-bottom:12px;color:#cbd5e1;}
+.neta-box{background:#0a1120;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:18px;font-size:.88rem;line-height:1.9;white-space:pre-wrap;word-break:break-word;max-height:400px;overflow-y:auto;margin-bottom:12px;color:#a5f3c0;}
+.mj-box{background:#060d18;color:#7dd3fc;border-radius:10px;padding:18px;font-size:.82rem;line-height:1.75;white-space:pre-wrap;word-break:break-word;margin-bottom:12px;font-family:'Courier New',monospace;border:1px solid rgba(96,165,250,.15);}
+.char-count{font-size:.75rem;color:#475569;text-align:right;margin-bottom:8px;}
+
+.btn-copy{background:#1d4ed8;color:white;border:none;padding:10px 20px;border-radius:8px;font-size:.85rem;cursor:pointer;font-weight:600;transition:.2s;}
+.btn-copy:hover{background:#2563eb;}
+.btn-copy.copied{background:#16a34a;}
+
+/* ===== Loading ===== */
+.loading{text-align:center;padding:50px;color:#60a5fa;font-size:.9rem;}
+.dots::after{content:'';animation:dots 1.5s infinite;}
+@keyframes dots{0%,20%{content:'';}40%{content:'.';}60%{content:'..';}80%,100%{content:'...'}}
+
+/* ===== Modal ===== */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:#1a2535;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:28px;max-width:480px;width:90%;max-height:88vh;overflow-y:auto;}
+.modal h2{font-size:1.05rem;font-weight:700;margin-bottom:16px;color:#60a5fa;}
+.modal-close{float:right;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#64748b;margin-top:-4px;}
+.btn-save{width:100%;padding:12px;background:#1d4ed8;color:white;border:none;border-radius:9px;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:16px;transition:.2s;}
+.btn-save:hover{background:#2563eb;}
+.howto-section{margin-bottom:14px;}
+.howto-section strong{display:block;margin-bottom:4px;color:#60a5fa;font-size:.88rem;}
+.howto-section p{font-size:.83rem;line-height:1.75;color:#94a3b8;}
+
+/* ===== Misc ===== */
+.season-tag{display:inline-block;padding:4px 12px;border-radius:12px;font-size:.72rem;font-weight:700;margin-left:10px;background:rgba(96,165,250,.15);color:#60a5fa;}
+.alert-box{background:rgba(239,68,68,.1);border:1.5px solid rgba(239,68,68,.3);border-radius:9px;padding:10px 14px;font-size:.82rem;color:#fca5a5;margin-top:8px;display:none;}
+
+/* キャッチコピー */
+.catch{text-align:center;padding:16px 0 8px;color:#94a3b8;font-size:.88rem;letter-spacing:.04em;}
+.catch strong{color:#f472b6;font-size:1rem;}
+
+.footer{text-align:center;padding:24px;font-size:.75rem;color:#334155;}
+
+@media(max-width:480px){
+  .header h1{font-size:1.35rem;}
+  .header-spacer{height:116px;}
+  .pills label{font-size:.75rem;padding:6px 10px;}
+  .mj-style-grid{grid-template-columns:1fr;}
+  .btn-gen{font-size:.95rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== 固定ヘッダー ===== -->
+<div class="header">
+  <h1 onclick="resetAll()" title="クリックで最初に戻る">💡 ネタみっけ</h1>
+  <p>ネタ切れ終わり。あなたの強みが記事になる。</p>
+  <div class="header-actions">
+    <button class="btn-hdr" onclick="openModal('howto')">📖 使い方</button>
+  </div>
+</div>
+<div class="header-spacer"></div>
+
+<div class="container">
+
+  <div class="catch">また白紙の画面で3時間無駄にしましたか？<br><strong>中小企業支援20年の現場経験 × AI</strong>が、読まれる記事ネタを一瞬で見つけます。</div>
+
+  <!-- ===== 入力フォーム ===== -->
+  <div class="card" id="inputCard">
+    <div class="card-title">📋 あなたのことを教えてください</div>
+
+    <label class="field-label">業種・肩書き<span class="badge-req">必須</span></label>
+    <input type="text" id="job" placeholder="例：税理士、美容師、製造業の経営者、フリーランスのWebデザイナー">
+
+    <label class="field-label">得意なこと・強み<span class="badge-req">必須</span></label>
+    <textarea id="strength" placeholder="例：節税対策の提案が得意。20年間300社以上の中小企業を支援してきた。数字が苦手な経営者にもわかりやすく説明できる。"></textarea>
+
+    <label class="field-label">読者に解決してほしい悩み<span class="badge-req">必須</span></label>
+    <textarea id="pain" placeholder="例：決算前にいつも慌てて節税対策をしている。税金のことが難しくて誰に相談していいかわからない。"></textarea>
+
+    <label class="field-label">発信の目的<span class="badge-req">必須</span></label>
+    <div class="pills">
+      <input type="radio" name="purpose" id="p1" value="集客・問い合わせ獲得" checked><label for="p1">集客・問い合わせ</label>
+      <input type="radio" name="purpose" id="p2" value="信頼構築・ブランディング"><label for="p2">信頼構築・ブランディング</label>
+      <input type="radio" name="purpose" id="p3" value="商品・サービスの販売促進"><label for="p3">商品・サービス販売</label>
+      <input type="radio" name="purpose" id="p4" value="採用・仲間集め"><label for="p4">採用・仲間集め</label>
+      <input type="radio" name="purpose" id="p5" value="想いや理念を伝える"><label for="p5">想いを伝える</label>
+    </div>
+
+    <label class="field-label">文体・トーン<span class="badge-req">必須</span></label>
+    <div class="pills">
+      <input type="radio" name="tone" id="tone1" value="語りかけるような親近感のある文体" checked><label for="tone1">語りかけ・親近感</label>
+      <input type="radio" name="tone" id="tone2" value="丁寧で信頼感のあるですます調"><label for="tone2">丁寧・信頼感</label>
+      <input type="radio" name="tone" id="tone3" value="実話・ストーリー仕立て"><label for="tone3">ストーリー実話風</label>
+      <input type="radio" name="tone" id="tone4" value="データや事例を重視した解説調"><label for="tone4">データ・解説調</label>
+    </div>
+
+    <label class="field-label">記事の長さ<span class="badge-req">必須</span></label>
+    <div class="pills">
+      <input type="radio" name="length" id="len1" value="1500文字程度"><label for="len1">1500文字（サクッと読める）</label>
+      <input type="radio" name="length" id="len2" value="2500文字程度" checked><label for="len2">2500文字（スタンダード）</label>
+      <input type="radio" name="length" id="len3" value="4000文字程度"><label for="len3">4000文字（読み応えあり）</label>
+    </div>
+
+    <label class="field-label">🖼️ サムネイルのビジュアルスタイル<span class="badge-req">必須</span></label>
+    <div class="mj-style-grid">
+      <input type="radio" name="mjstyle" id="mjs1" value="seasonal" checked>
+      <label class="mj-style-card" for="mjs1">
+        <div class="style-icon">🌸</div>
+        <div class="style-name">季節テーマ自動</div>
+        <div class="style-desc">春夏秋冬の季節感を毎回ランダムに。和の情緒で差別化。</div>
+      </label>
+
+      <input type="radio" name="mjstyle" id="mjs2" value="cinematic">
+      <label class="mj-style-card" for="mjs2">
+        <div class="style-icon">🎬</div>
+        <div class="style-name">シネマティック実写風</div>
+        <div class="style-desc">MJ V8が最も得意。映画のような劇的な光で高級感を演出。</div>
+      </label>
+
+      <input type="radio" name="mjstyle" id="mjs3" value="wamodern">
+      <label class="mj-style-card" for="mjs3">
+        <div class="style-icon">🎨</div>
+        <div class="style-name">和モダンイラスト風</div>
+        <div class="style-desc">フラットデザイン×和の色彩。士業・専門家系に最適。</div>
+      </label>
+
+      <input type="radio" name="mjstyle" id="mjs4" value="neon">
+      <label class="mj-style-card" for="mjs4">
+        <div class="style-icon">🌃</div>
+        <div class="style-name">ネオン未来都市風</div>
+        <div class="style-desc">AIツール・テック系に相性抜群。サイバーパンク東京がインパクト大。</div>
+      </label>
+
+      <input type="radio" name="mjstyle" id="mjs5" value="anime">
+      <label class="mj-style-card" for="mjs5">
+        <div class="style-icon">✨</div>
+        <div class="style-name">日本アニメ風</div>
+        <div class="style-desc">水彩テクスチャの温かみある世界観。飲食・美容・地域系と相性◎。</div>
+      </label>
+
+      <input type="radio" name="mjstyle" id="mjs6" value="luxury">
+      <label class="mj-style-card" for="mjs6">
+        <div class="style-icon">💎</div>
+        <div class="style-name">ラグジュアリー高級感</div>
+        <div class="style-desc">ダークゴールド×大理石。税理士・弁護士・コンサル系に最適。</div>
+      </label>
+    </div>
+
+    <label class="field-label">補足・特記事項<span class="badge-opt">任意</span></label>
+    <textarea id="note" placeholder="例：最近「インボイス制度」の相談が多い。地方の中小企業が主な対象。個人事業主向けのわかりやすい説明を重視している。"></textarea>
+
+    <button class="btn-gen" id="genBtn" onclick="generate()">💡 ネタを見つけてnote記事を生成する</button>
+  </div>
+
+  <!-- ===== 出力エリア ===== -->
+  <div class="output-section" id="outputSection">
+    <div class="card">
+      <div class="card-title">
+        📄 生成結果
+        <span class="season-tag" id="seasonTag"></span>
+      </div>
+
+      <div class="tab-btns">
+        <button class="tab-btn active" onclick="switchTab('article')">📝 note記事（PASONA）</button>
+        <button class="tab-btn" onclick="switchTab('neta')">💡 ネタ候補5本</button>
+        <button class="tab-btn" onclick="switchTab('mj')">🖼️ MJプロンプト</button>
+      </div>
+
+      <div id="tabArticle">
+        <div class="char-count" id="charCount"></div>
+        <div class="output-box" id="articleOut"></div>
+        <button class="btn-copy" onclick="copyText('articleOut',this,'📋 記事をコピー')">📋 記事をコピー</button>
+      </div>
+
+      <div id="tabNeta" style="display:none;">
+        <div class="neta-box" id="netaOut"></div>
+        <button class="btn-copy" onclick="copyText('netaOut',this,'📋 ネタをコピー')">📋 ネタをコピー</button>
+      </div>
+
+      <div id="tabMj" style="display:none;">
+        <div class="mj-box" id="mjOut"></div>
+        <button class="btn-copy" onclick="copyText('mjOut',this,'📋 プロンプトをコピー')">📋 プロンプトをコピー</button>
+      </div>
+
+      <button class="btn-reset" onclick="resetAll()">🔄 はじめに戻る</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== 使い方モーダル ===== -->
+<div class="modal-overlay" id="howtoModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('howto')">×</button>
+    <h2>📖 ネタみっけの使い方</h2>
+    <div class="howto-section">
+      <strong>① あなたのことを入力する</strong>
+      <p>業種・強み・読者の悩みを入力します。具体的に書くほど、刺さる記事になります。</p>
+    </div>
+    <div class="howto-section">
+      <strong>② 目的・文体・長さを選ぶ</strong>
+      <p>発信の目的と文章の雰囲気、記事の長さを選びます。</p>
+    </div>
+    <div class="howto-section">
+      <strong>③ 生成ボタンをクリック</strong>
+      <p>PASONAの法則で構成されたnote記事・ネタ候補5本・MJプロンプトが同時に生成されます。</p>
+    </div>
+    <div class="howto-section">
+      <strong>④ noteに貼り付ける</strong>
+      <p>「記事をコピー」してnoteのエディタに貼り付けてください。</p>
+    </div>
+    <div class="howto-section">
+      <strong>⑤ ネタ候補を活用する</strong>
+      <p>次回以降の記事ネタとして「ネタ候補5本」を保存しておきましょう。</p>
+    </div>
+    <div class="howto-section">
+      <strong>💡 ヒント</strong>
+      <p>画面上部の「💡 ネタみっけ」をクリックするといつでも最初に戻れます。</p>
+    </div>
+    <button class="btn-save" onclick="closeModal('howto')">閉じる</button>
+  </div>
+</div>
+
+<div class="footer">
+  <p>ネタみっけ ｜ Powered by Smile Plus Consulting</p>
+  <p style="margin-top:4px;">考えるを、ひとりにしない｜© 2026 spc-jp</p>
+</div>
+
+<script>
+const API_URL = 'https://note-mikke-api.yymmatsu.workers.dev';
+
+// ===== MJスタイル定義 =====
+const MJ_STYLES = {
+  cinematic:{
+    label:'🎬 シネマティック実写風',
+    prompt:(j,s)=>`cinematic photorealistic style, dramatic volumetric lighting, shallow depth of field, film grain texture, moody atmospheric Japanese professional scene representing ${j}, large bold white Japanese text "${j}" prominently in upper area, smaller white subtitle "${s}" below, dark dramatic background with golden rim light, 8k ultra detailed --ar 16:9 --v 8`
+  },
+  wamodern:{
+    label:'🎨 和モダンイラスト風',
+    prompt:(j,s)=>`modern Japanese illustration style, flat design with subtle gradients, traditional Japanese color palette with indigo and vermillion accents, minimalist editorial magazine composition, large bold white Japanese text "${j}" prominently in upper area, smaller white subtitle "${s}" below, clean sophisticated layout, 8k --ar 16:9 --v 8`
+  },
+  neon:{
+    label:'🌃 ネオン未来都市風',
+    prompt:(j,s)=>`neon-lit futuristic Japanese cityscape, cyberpunk Tokyo aesthetic at night, glowing holographic UI elements, rain-soaked reflections, electric blue and magenta neon, large bold white Japanese text "${j}" prominently in upper area with neon glow, smaller white subtitle "${s}" below, 8k --ar 16:9 --v 8`
+  },
+  anime:{
+    label:'✨ 日本アニメ風',
+    prompt:(j,s)=>`warm Japanese animation style, hand-drawn watercolor texture, soft glowing golden hour light, peaceful Japanese townscape, large bold white Japanese text "${j}" prominently in upper area, smaller white subtitle "${s}" below, heartwarming color palette, studio quality illustration, 8k --ar 16:9 --v 8`
+  },
+  luxury:{
+    label:'💎 ラグジュアリー高級感',
+    prompt:(j,s)=>`luxury dark gold aesthetic, polished black marble and rose gold metallic texture, elegant premium business, large bold white Japanese text "${j}" prominently in upper area with gold foil effect, smaller white subtitle "${s}" below, high-end corporate design, 8k --ar 16:9 --v 8`
+  }
+};
+
+// ===== 季節テーマ =====
+function getSeasonalTheme(){
+  const m=new Date().getMonth()+1;
+  const themes={
+    spring:[
+      {name:'🌸 春・桜ピンク',prompt:'Japanese spring cherry blossom background, soft pink sakura in full bloom, delicate petals floating, pastel dreamlike atmosphere'},
+      {name:'🌿 春・新緑ミント',prompt:'Japanese spring fresh green theme, new leaves under soft morning light, refreshing breeze and pale sky blue'},
+      {name:'💜 春・藤紫',prompt:'Japanese spring wisteria theme, purple wisteria blooms, soft lavender haze, ethereal romantic atmosphere'},
+    ],
+    summer:[
+      {name:'🌊 夏・海ブルー',prompt:'Japanese summer ocean theme, bright turquoise sea under blazing sun, energetic vibrant summer'},
+      {name:'🎆 夏・祭りネイビー',prompt:'Japanese summer festival night, deep navy sky with paper lanterns and fireworks, warm golden glow'},
+      {name:'🌿 夏・深緑',prompt:'Japanese summer forest theme, lush emerald mountain forest, cool refreshing green shade'},
+    ],
+    autumn:[
+      {name:'🍁 秋・紅葉クリムゾン',prompt:'Japanese autumn maple theme, brilliant crimson red maple leaves, warm amber golden light, cozy nostalgic forest'},
+      {name:'🍊 秋・収穫オレンジ',prompt:'Japanese autumn harvest theme, rich pumpkin orange and warm brown tones, abundant harvest season'},
+      {name:'🌕 秋・銀杏ゴールド',prompt:'Japanese autumn ginkgo avenue, rows of golden yellow ginkgo trees, soft nostalgic dusk light'},
+    ],
+    winter:[
+      {name:'❄️ 冬・雪景色アイスブルー',prompt:'Japanese winter snow theme, pristine white snowflakes falling, ice blue crystal clear sky, serene pure landscape'},
+      {name:'🌃 冬・真夜中ネイビー',prompt:'Japanese winter midnight theme, deep midnight navy starry sky, silver moonlight on frost, crisp cold silent night'},
+      {name:'🌸 冬・梅ローズ',prompt:'Japanese winter plum blossom, delicate pink plum flowers blooming in cold dark night, elegant resilience'},
+    ]
+  };
+  let s;
+  if(m>=3&&m<=5)s='spring';
+  else if(m>=6&&m<=8)s='summer';
+  else if(m>=9&&m<=11)s='autumn';
+  else s='winter';
+  const opts=themes[s];
+  return opts[Math.floor(Math.random()*opts.length)];
+}
+
+// ===== MJプロンプト生成 =====
+function buildMjPrompt(job, strength, styleKey){
+  const shortStrength = strength.slice(0,30);
+  if(styleKey==='seasonal'){
+    const t=getSeasonalTheme();
+    document.getElementById('seasonTag').textContent=t.name;
+    return `${t.prompt}, large bold white Japanese text "${job}" prominently in upper area, smaller white subtitle "${shortStrength}" below, sleek modern Japanese commercial design, cinematic lighting, ultra sharp text rendering, 8k --ar 16:9 --v 8`;
+  }
+  const style=MJ_STYLES[styleKey];
+  document.getElementById('seasonTag').textContent=style.label;
+  return style.prompt(job, shortStrength);
+}
+
+// ===== リセット =====
+function resetAll(){
+  document.getElementById('job').value='';
+  document.getElementById('strength').value='';
+  document.getElementById('pain').value='';
+  document.getElementById('note').value='';
+  document.getElementById('p1').checked=true;
+  document.getElementById('tone1').checked=true;
+  document.getElementById('len2').checked=true;
+  document.getElementById('mjs1').checked=true;
+  document.getElementById('outputSection').style.display='none';
+  document.getElementById('articleOut').textContent='';
+  document.getElementById('netaOut').textContent='';
+  document.getElementById('mjOut').textContent='';
+  document.getElementById('charCount').textContent='';
+  document.getElementById('seasonTag').textContent='';
+  switchTab('article');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ===== Modal =====
+function openModal(n){document.getElementById(n+'Modal').classList.add('open');}
+function closeModal(n){document.getElementById(n+'Modal').classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(el=>{
+  el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open');});
+});
+
+// ===== Tab =====
+function switchTab(tab){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{
+    b.classList.toggle('active',
+      (tab==='article'&&i===0)||(tab==='neta'&&i===1)||(tab==='mj'&&i===2)
+    );
+  });
+  document.getElementById('tabArticle').style.display=tab==='article'?'block':'none';
+  document.getElementById('tabNeta').style.display=tab==='neta'?'block':'none';
+  document.getElementById('tabMj').style.display=tab==='mj'?'block':'none';
+}
+
+// ===== コピー =====
+function copyText(id,btn,label){
+  navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>{
+    btn.textContent='✅ コピーしました！';
+    btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent=label;btn.classList.remove('copied');},2200);
+  });
+}
+
+// ===== メイン生成 =====
+async function generate(){
+  const job      = document.getElementById('job').value.trim();
+  const strength = document.getElementById('strength').value.trim();
+  const pain     = document.getElementById('pain').value.trim();
+  const purpose  = document.querySelector('input[name=purpose]:checked').value;
+  const tone     = document.querySelector('input[name=tone]:checked').value;
+  const length   = document.querySelector('input[name=length]:checked').value;
+  const mjStyle  = document.querySelector('input[name=mjstyle]:checked').value;
+  const noteText = document.getElementById('note').value.trim();
+
+  if(!job||!strength||!pain){
+    alert('業種・強み・読者の悩みは必須です✋');
+    return;
+  }
+
+  const mjPromptText = buildMjPrompt(job, strength, mjStyle);
+  const btn = document.getElementById('genBtn');
+  btn.disabled=true;
+  btn.textContent='⏳ 生成中です...少しお待ちください';
+  document.getElementById('outputSection').style.display='block';
+  document.getElementById('articleOut').innerHTML='<div class="loading">💡 記事を生成中<span class="dots"></span></div>';
+  document.getElementById('netaOut').innerHTML='<div class="loading">💡 ネタを探し中<span class="dots"></span></div>';
+  document.getElementById('mjOut').textContent='';
+  document.getElementById('charCount').textContent='';
+  switchTab('article');
+  document.getElementById('outputSection').scrollIntoView({behavior:'smooth'});
+
+  // ===== 記事プロンプト（PASONA） =====
+  const articlePrompt=`あなたはプロのセールスコピーライターです。
+以下の情報をもとに、PASONAの法則を用いたnote記事を日本語で生成してください。
+
+【情報】
+業種・肩書き：${job}
+得意なこと・強み：${strength}
+読者が抱える悩み：${pain}
+発信の目的：${purpose}
+文体・トーン：${tone}
+記事の長さ：${length}
+${noteText?'補足・特記事項：'+noteText:''}
+
+【PASONAの法則の構成】
+P（Problem）：読者の悩みや問題を鮮明に描写する
+A（Agitation）：その問題を放置したらどうなるかを煽る
+So（Solution）：解決策（あなたのサービス・強み）を提示する
+N（Narrowing）：今すぐ行動すべき理由・限定性・緊急性を入れる
+A（Action）：具体的な行動を促すCTA
+
+【必須ルール】
+・冒頭1行目は必ず「また白紙の画面で3時間無駄にしましたか？」から始める
+・「中小企業支援20年の現場経験」という権威性を自然に入れる
+・「今だけ限定」「先着〇名」などの緊急性を入れる
+・タイトルは読者が思わず読みたくなるキャッチーな表現にする（ベネフィット・数字を使う）
+・タイトル形式：タイトル：サブタイトル（コロン区切り）
+・## 大見出し を2〜3個、### 小見出し を各2〜3個使う
+・${length}の読み応えある内容にする
+・${tone}で書く
+
+【記事末尾に必ず含めること】
+・読者への優しい行動促進文（1〜2文）
+・空行
+・ハッシュタグ7つ横並び（スペース区切り、#${job}を含む）
+
+本文のみ出力してください。前置き・説明は不要です。`;
+
+  // ===== ネタ候補プロンプト =====
+  const netaPrompt=`あなたはnoteのコンテンツ戦略家です。
+以下の情報をもとに、読者に刺さるnoteのネタ候補を5本提案してください。
+
+業種・肩書き：${job}
+得意なこと・強み：${strength}
+読者が抱える悩み：${pain}
+発信の目的：${purpose}
+
+【出力形式】
+各ネタを以下の形式で出力してください：
+
+【ネタ1】
+タイトル案：（読者が思わずクリックしたくなるタイトル）
+一行概要：（どんな内容を書くか25文字以内）
+なぜ刺さるか：（ターゲット読者への訴求ポイント1文）
+
+（ネタ2〜5も同じ形式で）
+
+5本すべて出力してください。前置き不要です。`;
+
+  // ===== MJプロンプト =====
+  const mjApiPrompt=`以下のMidJourney V8用サムネイルプロンプトをそのまま出力してください。説明不要です。\n\n${mjPromptText}`;
+
+  try{
+    const [r1,r2,r3]=await Promise.all([
+      fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:5000,messages:[{role:'user',content:articlePrompt}]})}),
+      fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:2000,messages:[{role:'user',content:netaPrompt}]})}),
+      fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:512,messages:[{role:'user',content:mjApiPrompt}]})}),
+    ]);
+    const d1=await r1.json();
+    const d2=await r2.json();
+    const d3=await r3.json();
+
+    const articleText = d1.content?.[0]?.text||'エラーが発生しました。Worker URLを確認してください。';
+    const netaText    = d2.content?.[0]?.text||'ネタ生成に失敗しました。';
+    const mjText      = d3.content?.[0]?.text||mjPromptText;
+
+    document.getElementById('articleOut').textContent=articleText;
+    document.getElementById('netaOut').textContent=netaText;
+    document.getElementById('mjOut').textContent=mjText;
+
+    const bodyLen=articleText.replace(/^.+：.+\n/,'').replace(/#[^\s]+/g,'').trim().length;
+    document.getElementById('charCount').textContent=`📊 本文文字数：約${bodyLen.toLocaleString()}文字`;
+
+  }catch(err){
+    document.getElementById('articleOut').textContent=
+      'エラーが発生しました。\n\nWorker（note-mikke-api.yymmatsu.workers.dev）を確認してください。\n\n詳細：'+err.message;
+    document.getElementById('netaOut').textContent='';
+  }finally{
+    btn.disabled=false;
+    btn.textContent='💡 ネタを見つけてnote記事を生成する';
+  }
+}
+</script>
+</body>
+</html>
