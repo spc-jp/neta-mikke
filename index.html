@@ -7,27 +7,24 @@
 <meta name="description" content="ネタ切れ終わり。あなたの強みが記事になる。PASONAの法則で売れるnote記事を自動生成。">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Hiragino Sans','Meiryo',sans-serif;background:#0f1923;color:#e8eaf0;min-height:100vh;}
+body{font-family:'Hiragino Sans','Meiryo',sans-serif;background:#fff8f0;color:#2d1a00;min-height:100vh;}
 
 /* ===== ヘッダー固定 ===== */
 .header{
   position:fixed;top:0;left:0;right:0;z-index:100;
-  background:linear-gradient(135deg,#1a2744,#0d3b6e);
+  background:linear-gradient(135deg,#e8650a,#f59e0b);
   color:white;padding:14px 16px 12px;text-align:center;
-  box-shadow:0 3px 24px rgba(0,100,255,.25);
-  border-bottom:1px solid rgba(255,255,255,.08);
+  box-shadow:0 3px 20px rgba(232,101,10,.35);
 }
 .header h1{
   font-size:1.7rem;font-weight:900;letter-spacing:.06em;
-  cursor:pointer;display:inline-block;transition:.15s;
-  background:linear-gradient(90deg,#60a5fa,#a78bfa,#f472b6);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  cursor:pointer;display:inline-block;transition:.15s;color:white;
 }
 .header h1:hover{opacity:.82;}
-.header p{font-size:.82rem;opacity:.75;margin-top:3px;color:#cbd5e1;}
+.header p{font-size:.82rem;opacity:.9;margin-top:3px;color:#fff7ed;}
 .header-actions{display:flex;gap:8px;justify-content:center;margin-top:10px;}
-.btn-hdr{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#cbd5e1;padding:6px 14px;border-radius:20px;font-size:.76rem;cursor:pointer;transition:.2s;}
-.btn-hdr:hover{background:rgba(255,255,255,.2);}
+.btn-hdr{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:white;padding:6px 14px;border-radius:20px;font-size:.76rem;cursor:pointer;transition:.2s;}
+.btn-hdr:hover{background:rgba(255,255,255,.35);}
 
 .header-spacer{height:108px;}
 
@@ -35,107 +32,104 @@ body{font-family:'Hiragino Sans','Meiryo',sans-serif;background:#0f1923;color:#e
 .container{max-width:800px;margin:0 auto;padding:22px 16px 40px;}
 
 /* ===== Card ===== */
-.card{background:#1a2535;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:26px;box-shadow:0 4px 24px rgba(0,0,0,.3);margin-bottom:20px;}
-.card-title{font-size:1rem;font-weight:700;color:#60a5fa;margin-bottom:18px;display:flex;align-items:center;gap:6px;}
+.card{background:white;border-radius:16px;padding:26px;box-shadow:0 2px 18px rgba(232,101,10,.1);margin-bottom:20px;border:1px solid #fde8d0;}
+.card-title{font-size:1rem;font-weight:700;color:#e8650a;margin-bottom:18px;display:flex;align-items:center;gap:6px;}
 
 /* ===== Fields ===== */
-.field-label{display:block;font-size:.82rem;font-weight:600;color:#94a3b8;margin:16px 0 5px;}
+.field-label{display:block;font-size:.82rem;font-weight:600;color:#78350f;margin:16px 0 5px;}
 .field-label:first-of-type{margin-top:0;}
-.badge-req{color:#f472b6;font-size:.72rem;margin-left:5px;}
-.badge-opt{color:#64748b;font-size:.72rem;margin-left:5px;}
-.badge-multi{color:#60a5fa;font-size:.72rem;margin-left:5px;}
+.badge-req{color:#dc2626;font-size:.72rem;margin-left:5px;}
+.badge-opt{color:#9ca3af;font-size:.72rem;margin-left:5px;}
 
-input[type=text],input[type=url],textarea,select{
+input[type=text],input[type=url],textarea{
   width:100%;padding:10px 13px;
-  background:#0f1923;border:1.5px solid rgba(255,255,255,.12);
+  background:#fffbf5;border:1.5px solid #fcd9b0;
   border-radius:9px;font-size:.9rem;font-family:inherit;
-  color:#e8eaf0;transition:.2s;
+  color:#2d1a00;transition:.2s;
 }
-input:focus,textarea:focus,select:focus{
-  outline:none;border-color:#60a5fa;
-  box-shadow:0 0 0 3px rgba(96,165,250,.15);
+input:focus,textarea:focus{
+  outline:none;border-color:#f59e0b;
+  box-shadow:0 0 0 3px rgba(245,158,11,.15);
 }
 textarea{resize:vertical;min-height:80px;}
-select option{background:#1a2535;}
 
 /* ===== Pills ===== */
 .pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
 .pills input[type=radio]{display:none;}
-.pills label{margin:0;padding:7px 14px;border:1.5px solid rgba(255,255,255,.12);border-radius:20px;font-size:.8rem;cursor:pointer;transition:.2s;font-weight:500;color:#94a3b8;}
-.pills input[type=radio]:checked+label{background:#1d4ed8;border-color:#3b82f6;color:white;}
-.pills label:hover{border-color:#60a5fa;color:#60a5fa;}
+.pills label{margin:0;padding:7px 14px;border:1.5px solid #fcd9b0;border-radius:20px;font-size:.8rem;cursor:pointer;transition:.2s;font-weight:500;color:#78350f;background:#fffbf5;}
+.pills input[type=radio]:checked+label{background:#e8650a;border-color:#e8650a;color:white;}
+.pills label:hover{border-color:#f59e0b;color:#e8650a;}
 
 /* ===== MJ Style Grid ===== */
 .mj-style-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;}
 .mj-style-grid input[type=radio]{display:none;}
-.mj-style-card{border:2px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 14px;cursor:pointer;transition:.2s;background:#0f1923;}
-.mj-style-grid input[type=radio]:checked+.mj-style-card{border-color:#60a5fa;background:#1e3a5f;}
+.mj-style-card{border:2px solid #fcd9b0;border-radius:12px;padding:12px 14px;cursor:pointer;transition:.2s;background:#fffbf5;}
+.mj-style-grid input[type=radio]:checked+.mj-style-card{border-color:#e8650a;background:#fff3e8;}
 .mj-style-card .style-icon{font-size:1.4rem;margin-bottom:4px;}
-.mj-style-card .style-name{font-size:.82rem;font-weight:700;color:#e2e8f0;margin-bottom:2px;}
-.mj-style-card .style-desc{font-size:.72rem;color:#64748b;line-height:1.5;}
-.mj-style-grid input[type=radio]:checked+.mj-style-card .style-name{color:#60a5fa;}
+.mj-style-card .style-name{font-size:.82rem;font-weight:700;color:#2d1a00;margin-bottom:2px;}
+.mj-style-card .style-desc{font-size:.72rem;color:#9a6430;line-height:1.5;}
+.mj-style-grid input[type=radio]:checked+.mj-style-card .style-name{color:#e8650a;}
 
 /* ===== Buttons ===== */
 .btn-gen{
   width:100%;padding:16px;
-  background:linear-gradient(135deg,#1d4ed8,#7c3aed);
+  background:linear-gradient(135deg,#e8650a,#f59e0b);
   color:white;border:none;border-radius:12px;font-size:1.05rem;font-weight:700;
   cursor:pointer;transition:.2s;letter-spacing:.05em;margin-top:20px;
-  box-shadow:0 4px 20px rgba(99,102,241,.3);
+  box-shadow:0 4px 20px rgba(232,101,10,.3);
 }
-.btn-gen:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(99,102,241,.45);}
+.btn-gen:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(232,101,10,.45);}
 .btn-gen:active{transform:translateY(0);}
-.btn-gen:disabled{background:#334155;cursor:not-allowed;transform:none;box-shadow:none;}
+.btn-gen:disabled{background:#d1b896;cursor:not-allowed;transform:none;box-shadow:none;}
 
 .btn-reset{
-  width:100%;padding:14px;background:transparent;
-  color:#60a5fa;border:1.5px solid #60a5fa;border-radius:12px;
+  width:100%;padding:14px;background:white;
+  color:#e8650a;border:2px solid #e8650a;border-radius:12px;
   font-size:.95rem;font-weight:700;cursor:pointer;transition:.2s;
   letter-spacing:.05em;margin-top:12px;
 }
-.btn-reset:hover{background:rgba(96,165,250,.1);}
+.btn-reset:hover{background:#fff3e8;}
 
 /* ===== Output ===== */
 .output-section{display:none;}
 .tab-btns{display:flex;gap:8px;margin-bottom:18px;}
-.tab-btn{flex:1;padding:10px;border:1.5px solid rgba(255,255,255,.1);background:#0f1923;border-radius:9px;font-size:.82rem;font-weight:600;cursor:pointer;color:#64748b;transition:.2s;}
-.tab-btn.active{background:#1d4ed8;border-color:#3b82f6;color:white;}
+.tab-btn{flex:1;padding:10px;border:1.5px solid #fcd9b0;background:#fffbf5;border-radius:9px;font-size:.82rem;font-weight:600;cursor:pointer;color:#9a6430;transition:.2s;}
+.tab-btn.active{background:#e8650a;border-color:#e8650a;color:white;}
 
-.output-box{background:#0a1120;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:18px;font-size:.88rem;line-height:1.9;white-space:pre-wrap;word-break:break-word;max-height:560px;overflow-y:auto;margin-bottom:12px;color:#cbd5e1;}
-.neta-box{background:#0a1120;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:18px;font-size:.88rem;line-height:1.9;white-space:pre-wrap;word-break:break-word;max-height:400px;overflow-y:auto;margin-bottom:12px;color:#a5f3c0;}
-.mj-box{background:#060d18;color:#7dd3fc;border-radius:10px;padding:18px;font-size:.82rem;line-height:1.75;white-space:pre-wrap;word-break:break-word;margin-bottom:12px;font-family:'Courier New',monospace;border:1px solid rgba(96,165,250,.15);}
-.char-count{font-size:.75rem;color:#475569;text-align:right;margin-bottom:8px;}
+.output-box{background:#fffbf5;border:1.5px solid #fcd9b0;border-radius:10px;padding:18px;font-size:.88rem;line-height:1.9;white-space:pre-wrap;word-break:break-word;max-height:560px;overflow-y:auto;margin-bottom:12px;color:#2d1a00;}
+.neta-box{background:#fff8ec;border:1.5px solid #fcd9b0;border-radius:10px;padding:18px;font-size:.88rem;line-height:1.9;white-space:pre-wrap;word-break:break-word;max-height:400px;overflow-y:auto;margin-bottom:12px;color:#78350f;}
+.mj-box{background:#2d1a00;color:#fde8c0;border-radius:10px;padding:18px;font-size:.82rem;line-height:1.75;white-space:pre-wrap;word-break:break-word;margin-bottom:12px;font-family:'Courier New',monospace;border:1px solid rgba(245,158,11,.2);}
+.char-count{font-size:.75rem;color:#9a6430;text-align:right;margin-bottom:8px;}
 
-.btn-copy{background:#1d4ed8;color:white;border:none;padding:10px 20px;border-radius:8px;font-size:.85rem;cursor:pointer;font-weight:600;transition:.2s;}
-.btn-copy:hover{background:#2563eb;}
+.btn-copy{background:#e8650a;color:white;border:none;padding:10px 20px;border-radius:8px;font-size:.85rem;cursor:pointer;font-weight:600;transition:.2s;}
+.btn-copy:hover{background:#f59e0b;}
 .btn-copy.copied{background:#16a34a;}
 
 /* ===== Loading ===== */
-.loading{text-align:center;padding:50px;color:#60a5fa;font-size:.9rem;}
+.loading{text-align:center;padding:50px;color:#e8650a;font-size:.9rem;}
 .dots::after{content:'';animation:dots 1.5s infinite;}
 @keyframes dots{0%,20%{content:'';}40%{content:'.';}60%{content:'..';}80%,100%{content:'...'}}
 
 /* ===== Modal ===== */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;}
 .modal-overlay.open{display:flex;}
-.modal{background:#1a2535;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:28px;max-width:480px;width:90%;max-height:88vh;overflow-y:auto;}
-.modal h2{font-size:1.05rem;font-weight:700;margin-bottom:16px;color:#60a5fa;}
-.modal-close{float:right;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#64748b;margin-top:-4px;}
-.btn-save{width:100%;padding:12px;background:#1d4ed8;color:white;border:none;border-radius:9px;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:16px;transition:.2s;}
-.btn-save:hover{background:#2563eb;}
+.modal{background:white;border-radius:16px;padding:28px;max-width:480px;width:90%;max-height:88vh;overflow-y:auto;border:1px solid #fcd9b0;}
+.modal h2{font-size:1.05rem;font-weight:700;margin-bottom:16px;color:#e8650a;}
+.modal-close{float:right;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#9a6430;margin-top:-4px;}
+.btn-save{width:100%;padding:12px;background:#e8650a;color:white;border:none;border-radius:9px;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:16px;transition:.2s;}
+.btn-save:hover{background:#f59e0b;}
 .howto-section{margin-bottom:14px;}
-.howto-section strong{display:block;margin-bottom:4px;color:#60a5fa;font-size:.88rem;}
-.howto-section p{font-size:.83rem;line-height:1.75;color:#94a3b8;}
+.howto-section strong{display:block;margin-bottom:4px;color:#e8650a;font-size:.88rem;}
+.howto-section p{font-size:.83rem;line-height:1.75;color:#78350f;}
 
 /* ===== Misc ===== */
-.season-tag{display:inline-block;padding:4px 12px;border-radius:12px;font-size:.72rem;font-weight:700;margin-left:10px;background:rgba(96,165,250,.15);color:#60a5fa;}
-.alert-box{background:rgba(239,68,68,.1);border:1.5px solid rgba(239,68,68,.3);border-radius:9px;padding:10px 14px;font-size:.82rem;color:#fca5a5;margin-top:8px;display:none;}
+.season-tag{display:inline-block;padding:4px 12px;border-radius:12px;font-size:.72rem;font-weight:700;margin-left:10px;background:#fff3e8;color:#e8650a;}
+.alert-box{background:#fef2f2;border:1.5px solid #fca5a5;border-radius:9px;padding:10px 14px;font-size:.82rem;color:#dc2626;margin-top:8px;display:none;}
 
-/* キャッチコピー */
-.catch{text-align:center;padding:16px 0 8px;color:#94a3b8;font-size:.88rem;letter-spacing:.04em;}
-.catch strong{color:#f472b6;font-size:1rem;}
+.catch{text-align:center;padding:16px 0 8px;color:#78350f;font-size:.88rem;letter-spacing:.04em;line-height:1.8;}
+.catch strong{color:#e8650a;font-size:1rem;}
 
-.footer{text-align:center;padding:24px;font-size:.75rem;color:#334155;}
+.footer{text-align:center;padding:24px;font-size:.75rem;color:#c4956a;}
 
 @media(max-width:480px){
   .header h1{font-size:1.35rem;}
@@ -160,7 +154,10 @@ select option{background:#1a2535;}
 
 <div class="container">
 
-  <div class="catch">また白紙の画面で3時間無駄にしましたか？<br><strong>中小企業支援20年の現場経験 × AI</strong>が、読まれる記事ネタを一瞬で見つけます。</div>
+  <div class="catch">
+    また白紙の画面で3時間無駄にしましたか？<br>
+    <strong>中小企業支援20年の現場経験 × AI</strong>が、読まれる記事ネタを一瞬で見つけます。
+  </div>
 
   <!-- ===== 入力フォーム ===== -->
   <div class="card" id="inputCard">
@@ -327,7 +324,6 @@ select option{background:#1a2535;}
 <script>
 const API_URL = 'https://note-mikke-api.yymmatsu.workers.dev';
 
-// ===== MJスタイル定義 =====
 const MJ_STYLES = {
   cinematic:{
     label:'🎬 シネマティック実写風',
@@ -351,7 +347,6 @@ const MJ_STYLES = {
   }
 };
 
-// ===== 季節テーマ =====
 function getSeasonalTheme(){
   const m=new Date().getMonth()+1;
   const themes={
@@ -385,9 +380,8 @@ function getSeasonalTheme(){
   return opts[Math.floor(Math.random()*opts.length)];
 }
 
-// ===== MJプロンプト生成 =====
 function buildMjPrompt(job, strength, styleKey){
-  const shortStrength = strength.slice(0,30);
+  const shortStrength=strength.slice(0,30);
   if(styleKey==='seasonal'){
     const t=getSeasonalTheme();
     document.getElementById('seasonTag').textContent=t.name;
@@ -395,10 +389,9 @@ function buildMjPrompt(job, strength, styleKey){
   }
   const style=MJ_STYLES[styleKey];
   document.getElementById('seasonTag').textContent=style.label;
-  return style.prompt(job, shortStrength);
+  return style.prompt(job,shortStrength);
 }
 
-// ===== リセット =====
 function resetAll(){
   document.getElementById('job').value='';
   document.getElementById('strength').value='';
@@ -418,14 +411,12 @@ function resetAll(){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// ===== Modal =====
 function openModal(n){document.getElementById(n+'Modal').classList.add('open');}
 function closeModal(n){document.getElementById(n+'Modal').classList.remove('open');}
 document.querySelectorAll('.modal-overlay').forEach(el=>{
   el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open');});
 });
 
-// ===== Tab =====
 function switchTab(tab){
   document.querySelectorAll('.tab-btn').forEach((b,i)=>{
     b.classList.toggle('active',
@@ -437,7 +428,6 @@ function switchTab(tab){
   document.getElementById('tabMj').style.display=tab==='mj'?'block':'none';
 }
 
-// ===== コピー =====
 function copyText(id,btn,label){
   navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>{
     btn.textContent='✅ コピーしました！';
@@ -446,7 +436,6 @@ function copyText(id,btn,label){
   });
 }
 
-// ===== メイン生成 =====
 async function generate(){
   const job      = document.getElementById('job').value.trim();
   const strength = document.getElementById('strength').value.trim();
@@ -457,13 +446,10 @@ async function generate(){
   const mjStyle  = document.querySelector('input[name=mjstyle]:checked').value;
   const noteText = document.getElementById('note').value.trim();
 
-  if(!job||!strength||!pain){
-    alert('業種・強み・読者の悩みは必須です✋');
-    return;
-  }
+  if(!job||!strength||!pain){alert('業種・強み・読者の悩みは必須です✋');return;}
 
-  const mjPromptText = buildMjPrompt(job, strength, mjStyle);
-  const btn = document.getElementById('genBtn');
+  const mjPromptText=buildMjPrompt(job,strength,mjStyle);
+  const btn=document.getElementById('genBtn');
   btn.disabled=true;
   btn.textContent='⏳ 生成中です...少しお待ちください';
   document.getElementById('outputSection').style.display='block';
@@ -474,7 +460,6 @@ async function generate(){
   switchTab('article');
   document.getElementById('outputSection').scrollIntoView({behavior:'smooth'});
 
-  // ===== 記事プロンプト（PASONA） =====
   const articlePrompt=`あなたはプロのセールスコピーライターです。
 以下の情報をもとに、PASONAの法則を用いたnote記事を日本語で生成してください。
 
@@ -511,7 +496,6 @@ A（Action）：具体的な行動を促すCTA
 
 本文のみ出力してください。前置き・説明は不要です。`;
 
-  // ===== ネタ候補プロンプト =====
   const netaPrompt=`あなたはnoteのコンテンツ戦略家です。
 以下の情報をもとに、読者に刺さるnoteのネタ候補を5本提案してください。
 
@@ -532,7 +516,6 @@ A（Action）：具体的な行動を促すCTA
 
 5本すべて出力してください。前置き不要です。`;
 
-  // ===== MJプロンプト =====
   const mjApiPrompt=`以下のMidJourney V8用サムネイルプロンプトをそのまま出力してください。説明不要です。\n\n${mjPromptText}`;
 
   try{
@@ -547,18 +530,14 @@ A（Action）：具体的な行動を促すCTA
     const d1=await r1.json();
     const d2=await r2.json();
     const d3=await r3.json();
-
-    const articleText = d1.content?.[0]?.text||'エラーが発生しました。Worker URLを確認してください。';
-    const netaText    = d2.content?.[0]?.text||'ネタ生成に失敗しました。';
-    const mjText      = d3.content?.[0]?.text||mjPromptText;
-
+    const articleText=d1.content?.[0]?.text||'エラーが発生しました。Worker URLを確認してください。';
+    const netaText   =d2.content?.[0]?.text||'ネタ生成に失敗しました。';
+    const mjText     =d3.content?.[0]?.text||mjPromptText;
     document.getElementById('articleOut').textContent=articleText;
     document.getElementById('netaOut').textContent=netaText;
     document.getElementById('mjOut').textContent=mjText;
-
     const bodyLen=articleText.replace(/^.+：.+\n/,'').replace(/#[^\s]+/g,'').trim().length;
     document.getElementById('charCount').textContent=`📊 本文文字数：約${bodyLen.toLocaleString()}文字`;
-
   }catch(err){
     document.getElementById('articleOut').textContent=
       'エラーが発生しました。\n\nWorker（note-mikke-api.yymmatsu.workers.dev）を確認してください。\n\n詳細：'+err.message;
